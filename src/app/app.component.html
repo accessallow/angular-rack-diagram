@@ -98,6 +98,57 @@
     </svg:g>
   </ng-container>
 
+  <!--OLD CODE-->
+
+  <ng-container *ngIf="false && front_view">
+    <svg:g *ngFor="let device of devices_front">
+      <!--Device-->
+      <rect
+        [attr.x]="device.buffer_x1 + origin_x"
+        [attr.y]="
+          rack_height -
+          (device.rack_position - 1) * rack_unit_height -
+          device.height -
+          device.buffer_y2
+        "
+        [attr.width]="device.width"
+        [attr.height]="device.height"
+        [attr.style]="device_style"
+      />
+
+      <!--Buffer-->
+      <rect
+        *ngIf="buffer_visible"
+        [attr.x]="origin_x"
+        [attr.y]="
+          rack_height -
+          (device.rack_position - 1) * rack_unit_height -
+          device.height -
+          device.buffer_y1 -
+          device.buffer_y2
+        "
+        [attr.width]="device.width + device.buffer_x1 + device.buffer_x2"
+        [attr.height]="device.height + device.buffer_y1 + device.buffer_y2"
+        [attr.style]="device_buffer_style"
+      />
+
+      <text
+        [attr.x]="device.buffer_x1 + origin_x + device.width / 4"
+        [attr.y]="
+          rack_height -
+          (device.rack_position - 1) * rack_unit_height -
+          device.height / 2 -
+          device.buffer_y1 -
+          device.buffer_y2
+        "
+        font-size="12"
+        fill="black"
+      >
+        {{ device.name }}
+      </text>
+    </svg:g>
+  </ng-container>
+
   <ng-container *ngIf="false && back_view">
     <svg:g *ngFor="let device of devices_back">
       <!--Device-->
