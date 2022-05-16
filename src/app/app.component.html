@@ -1,0 +1,253 @@
+<div>
+  <input
+    type="checkbox"
+    [(ngModel)]="front_view"
+    (change)="fvChange($event)"
+  />Front View &nbsp;
+  <input
+    type="checkbox"
+    [(ngModel)]="back_view"
+    (change)="bvChange($event)"
+  />Back View &nbsp;
+  <input
+    type="checkbox"
+    [(ngModel)]="see_through"
+    (change)="stChange($event)"
+  />See through
+  <input
+    type="checkbox"
+    [(ngModel)]="buffer_visible"
+    (change)="bufferChange($event)"
+  />Buffer Visible
+</div>
+
+<svg [attr.width]="total_width" [attr.height]="total_height">
+  <rect
+    [attr.x]="origin_x"
+    [attr.y]="origin_y"
+    [attr.width]="rack_unit_width"
+    [attr.height]="rack_height"
+    [attr.style]="style"
+  />
+
+  <svg:g *ngFor="let i of rack_unit_array">
+    <text
+      [attr.x]="origin_x - 20"
+      [attr.y]="i * rack_unit_height - rack_unit_height / 2 + 5"
+      fill="black"
+    >
+      {{ rack_units - i + 1 }}
+    </text>
+
+    <line
+      [attr.x1]="origin_x"
+      [attr.y1]="i * rack_unit_height"
+      [attr.x2]="origin_x + rack_unit_width"
+      [attr.y2]="i * rack_unit_height"
+      style="stroke:rgb(0,0,0);stroke-width:2"
+      stroke-dasharray="2,5"
+    />
+  </svg:g>
+
+  <ng-container *ngIf="true && front_view">
+    <svg:g *ngFor="let device of devices_front">
+      <!--Device-->
+      <rect
+        [attr.x]="device.buffer_x1 + origin_x"
+        [attr.y]="
+          rack_height -
+          (device.rack_position - 1) * rack_unit_height -
+          device.height -
+          device.buffer_y2
+        "
+        [attr.width]="device.width"
+        [attr.height]="device.height"
+        [attr.style]="device_style"
+      />
+
+      <!--Buffer-->
+      <rect
+        *ngIf="buffer_visible"
+        [attr.x]="origin_x"
+        [attr.y]="
+          rack_height -
+          (device.rack_position - 1) * rack_unit_height -
+          device.height -
+          device.buffer_y1 -
+          device.buffer_y2
+        "
+        [attr.width]="device.width + device.buffer_x1 + device.buffer_x2"
+        [attr.height]="device.height + device.buffer_y1 + device.buffer_y2"
+        [attr.style]="device_buffer_style"
+      />
+
+      <text
+        [attr.x]="device.buffer_x1 + origin_x + device.width / 4"
+        [attr.y]="
+          rack_height -
+          (device.rack_position - 1) * rack_unit_height -
+          device.height / 2 -
+          device.buffer_y1 -
+          device.buffer_y2
+        "
+        font-size="12"
+        fill="black"
+      >
+        {{ device.name }}
+      </text>
+    </svg:g>
+  </ng-container>
+
+  <ng-container *ngIf="false && back_view">
+    <svg:g *ngFor="let device of devices_back">
+      <!--Device-->
+      <rect
+        [attr.x]="device.buffer_x1 + origin_x"
+        [attr.y]="
+          rack_height -
+          (device.rack_position - 1) * rack_unit_height -
+          device.height -
+          device.buffer_y2
+        "
+        [attr.width]="device.width"
+        [attr.height]="device.height"
+        [attr.style]="device_style"
+      />
+
+      <!--Buffer-->
+      <rect
+        *ngIf="buffer_visible"
+        [attr.x]="origin_x"
+        [attr.y]="
+          rack_height -
+          (device.rack_position - 1) * rack_unit_height -
+          device.height -
+          device.buffer_y1 -
+          device.buffer_y2
+        "
+        [attr.width]="device.width + device.buffer_x1 + device.buffer_x2"
+        [attr.height]="device.height + device.buffer_y1 + device.buffer_y2"
+        [attr.style]="device_buffer_style"
+      />
+
+      <text
+        [attr.x]="device.buffer_x1 + origin_x + device.width / 4"
+        [attr.y]="
+          rack_height -
+          (device.rack_position - 1) * rack_unit_height -
+          device.height / 2 -
+          device.buffer_y1 -
+          device.buffer_y2
+        "
+        font-size="12"
+        fill="black"
+      >
+        {{ device.name }}
+      </text>
+    </svg:g>
+  </ng-container>
+
+  <ng-container *ngIf="false && see_through">
+    <svg:g *ngFor="let device of devices_back">
+      <!--Device-->
+      <rect
+        [attr.x]="rack_unit_width - device.width - device.buffer_x1 + origin_x"
+        [attr.y]="
+          rack_height -
+          (device.rack_position - 1) * rack_unit_height -
+          device.height -
+          device.buffer_y2
+        "
+        [attr.width]="device.width"
+        [attr.height]="device.height"
+        [attr.style]="device_back_style"
+      />
+
+      <!--Buffer-->
+      <rect
+        *ngIf="buffer_visible"
+        [attr.x]="
+          rack_unit_width -
+          device.width +
+          origin_x -
+          device.buffer_x2 -
+          device.buffer_x1
+        "
+        [attr.y]="
+          rack_height -
+          (device.rack_position - 1) * rack_unit_height -
+          device.height -
+          device.buffer_y1 -
+          device.buffer_y2
+        "
+        [attr.width]="device.width + device.buffer_x1 + device.buffer_x2"
+        [attr.height]="device.height + device.buffer_y1 + device.buffer_y2"
+        [attr.style]="device_back_buffer_style"
+      />
+
+      <text
+        [attr.x]="
+          rack_unit_width - (device.buffer_x1 + origin_x + device.width / 4)
+        "
+        [attr.y]="
+          rack_height -
+          (device.rack_position - 1) * rack_unit_height -
+          device.height / 2 -
+          device.buffer_y1 -
+          device.buffer_y2
+        "
+        font-size="12"
+        fill="black"
+      >
+        {{ device.name }}
+      </text>
+    </svg:g>
+
+    <svg:g *ngFor="let device of devices_front">
+      <!--Device-->
+      <rect
+        [attr.x]="device.buffer_x1 + origin_x"
+        [attr.y]="
+          rack_height -
+          (device.rack_position - 1) * rack_unit_height -
+          device.height -
+          device.buffer_y2
+        "
+        [attr.width]="device.width"
+        [attr.height]="device.height"
+        [attr.style]="device_style"
+      />
+
+      <!--Buffer-->
+      <rect
+        *ngIf="buffer_visible"
+        [attr.x]="origin_x"
+        [attr.y]="
+          rack_height -
+          (device.rack_position - 1) * rack_unit_height -
+          device.height -
+          device.buffer_y1 -
+          device.buffer_y2
+        "
+        [attr.width]="device.width + device.buffer_x1 + device.buffer_x2"
+        [attr.height]="device.height + device.buffer_y1 + device.buffer_y2"
+        [attr.style]="device_buffer_style"
+      />
+
+      <text
+        [attr.x]="device.buffer_x1 + origin_x + device.width / 4"
+        [attr.y]="
+          rack_height -
+          (device.rack_position - 1) * rack_unit_height -
+          device.height / 2 -
+          device.buffer_y1 -
+          device.buffer_y2
+        "
+        font-size="12"
+        fill="black"
+      >
+        {{ device.name }}
+      </text>
+    </svg:g>
+  </ng-container>
+</svg>
