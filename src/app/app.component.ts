@@ -64,18 +64,6 @@ export class AppComponent {
     },
   ];
 
-  devices_front_1 = [
-    {
-      name: 'Test Device-1',
-      heightUsed: [1.0, 7.0],
-      widthUsed: [0.0, 19.0],
-      depthUsed: [0.0, 30.0],
-      bufferHeightUsed: [1.0, 7.0],
-      bufferWidthUsed: [0.0, 19.0],
-      bufferDepthUsed: [0.0, 30.0],
-    },
-  ];
-
   devices_back = [
     {
       name: 'Test Device-4',
